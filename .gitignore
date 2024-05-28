@@ -1,0 +1,10 @@
+.vscode
+.DS_Store
+bin
+obj
+*.http
+Migrations
+appsettings.json 
+.env
+# Backend.csproj
+# *.csproj
