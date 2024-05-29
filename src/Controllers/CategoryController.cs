@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("/categories")]
+[Route("/api/categories")]
 public class CategoryController : ControllerBase
 {
     private readonly CategoryService _categoryService;
