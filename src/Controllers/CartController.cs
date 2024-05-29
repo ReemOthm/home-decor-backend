@@ -3,7 +3,7 @@ using api.Controllers;
 using api.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/")]
+[Route("/")]
 [ApiController]
 public class CartController : ControllerBase
 {

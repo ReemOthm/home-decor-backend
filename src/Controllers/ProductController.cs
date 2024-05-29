@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/products")]
+[Route("/products")]
 public class ProductController : ControllerBase
 {
 
