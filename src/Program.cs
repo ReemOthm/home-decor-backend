@@ -103,7 +103,7 @@ if (builder.Environment.IsDevelopment())
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("https://main--home-decor-project.netlify.app", "https://main--home-decor-project.netlify.app/")
+        builder.WithOrigins("https://homedecore-project.netlify.app/", "https://homedecore-project.netlify.app/")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
@@ -116,7 +116,7 @@ else
     {
         options.AddPolicy("AllowSpecificOrigin", builder =>
         {
-            builder.WithOrigins("https://main--home-decor-project.netlify.app", "https://main--home-decor-project.netlify.app/")
+            builder.WithOrigins("https://homedecore-project.netlify.app/", "https://homedecore-project.netlify.app/")
             // builder.WithOrigins("https://http://localhost:3000/")
             .AllowAnyMethod()
             .AllowAnyHeader()
