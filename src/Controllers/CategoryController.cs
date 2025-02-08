@@ -52,6 +52,20 @@ public class CategoryController : ControllerBase
         }
     }
 
+    [HttpGet("{productSlug}")]
+    public async Task<IActionResult> GetCategoryByProductSlug(string productSlug)
+    {
+        var category = await _categoryService.GetCategoryByProductSlug(productSlug);
+        if (category == null)
+        {
+            throw new NotFoundException("Category Not Found");
+        }
+        else
+        {
+            return ApiResponse.Success(category, "Category Found");
+        }
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> CreateCategory(CategoryModel newCategory)

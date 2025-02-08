@@ -9,11 +9,9 @@ public class OrderModel
 
   [Required(ErrorMessage = "Order Status is required")]
   public required OrderStatus Status { get; set; }
+  public PaymentMethod Payment { get; set; }
 
-  [Required(ErrorMessage = "Payment method is required")]
-  public required PaymentMethod Payment { get; set; }
-
-  public required double Amount { get; set; }
+  public double Amount { get; set; }
 
   [Required(ErrorMessage = "Product Id is required")]
   public Guid ProductId { get; set; }

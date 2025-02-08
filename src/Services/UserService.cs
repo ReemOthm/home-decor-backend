@@ -68,7 +68,7 @@ public class UserService
         return createUser;
     }
 
-    public async Task<bool> UpdateUser(Guid userId, [FromBody] UpdatedUserDto updateUser)
+    public async Task<User?> UpdateUser(Guid userId, [FromBody] UpdatedUserDto updateUser)
     {
         var existingUser = _dbContext.Users.FirstOrDefault(u => u.UserID == userId);
         if (existingUser != null && updateUser != null)
@@ -77,10 +77,10 @@ public class UserService
             existingUser.LastName = updateUser.LastName ?? existingUser.LastName;
             // existingUser.IsBanned = updateUser.IsBanned;
             await _dbContext.SaveChangesAsync();
-            return true;
+            return existingUser;
         }
 
-        return false;
+        return null;
     }
     public async Task<bool> BannedUnBannedUser(Guid userId)
     {

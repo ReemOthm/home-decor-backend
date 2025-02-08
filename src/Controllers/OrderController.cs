@@ -72,7 +72,7 @@ namespace Controllers
 
         // [Authorize(Roles = "notBanned")]
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(Guid productId, PaymentMethod paymentMethod)
+        public async Task<IActionResult> CreateOrder(List<Item> items, double amount, PaymentMethod paymentMethod)
         {
             // Create Order
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -84,10 +84,10 @@ namespace Controllers
             {
                 throw new BadRequestException("Invalid User Id");
             }
-            var orderId = await _orderService.CreateOrderService(userId, paymentMethod);
+            var orderId = await _orderService.CreateOrderService(userId, amount, paymentMethod);
 
             // Add product the order
-            await _orderService.AddProductToOrder(orderId, productId);
+            await _orderService.AddProductToOrder(orderId, items);
             return ApiResponse.Created("Order has added successfully!");
         }
 

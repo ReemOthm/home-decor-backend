@@ -45,8 +45,9 @@ public class OrderService
         return await _appDbContext.Orders.Include(o => o.Products).FirstOrDefaultAsync(o => o.OrderId == orderId);
     }
 
-    public async Task<Guid> CreateOrderService(Guid userId, PaymentMethod paymentMethod)
+    public async Task<Guid> CreateOrderService(Guid userId, double amount, PaymentMethod paymentMethod)
     {
+        // var method = Enum.GetName(typeof(PaymentMethod), paymentMethod);
         // Create record
         var order = new Order
         {
@@ -54,8 +55,9 @@ public class OrderService
             UserId = userId,
             Status = OrderStatus.Pending,
             Payment = paymentMethod,
-            Amount = 0,
+            Amount = amount
         };
+        Console.WriteLine(order);
 
         // Add the record to the context
         await _appDbContext.Orders.AddAsync(order);
@@ -65,27 +67,30 @@ public class OrderService
         return order.OrderId;
     }
 
-    public async Task AddProductToOrder(Guid orderId, Guid productId)
+    public async Task AddProductToOrder(Guid orderId, List<Item> productsItem)
     {
+        List<Item> items = productsItem;
         var order = await _appDbContext.Orders.Include(o => o.Products).FirstOrDefaultAsync(o => o.OrderId == orderId);
-        var product = await _appDbContext.Products.FindAsync(productId);
+        foreach (var item in items){
+            var product = await _appDbContext.Products.FindAsync(item.ProductId);
+            if (order != null && product != null)
+                    {
+                        if (product.Quantity == 0)
+                        {
+                            throw new InvalidOperationException("This product is unavailable");
+                        }
+                        product.Quantity = item.Quantity;
+                        product.Price = item.Price;
 
-        if (order != null && product != null)
-        {
-            if (product.Quantity == 0)
-            {
-                throw new InvalidOperationException("This product is unavailable");
-            }
-
-            order.Products.Add(product);
-            product.Quantity--;
-            order.Amount = (double) product.Price;
-            await _appDbContext.SaveChangesAsync();
-        }
-        else
-        {
-            throw new InvalidOperationException("This Product has already added to the Order");
-        }
+                        order.Products.Add(product);
+                        // product.Quantity--;
+                        await _appDbContext.SaveChangesAsync();
+                    } 
+                    else
+                    {
+                        throw new InvalidOperationException("This Product has already added to the Order");
+                    }
+                    }
     }
 
     public async Task<bool> UpdateOrderService(Guid orderId, OrderModel updateOrder)
@@ -94,8 +99,8 @@ public class OrderService
         if (existingOrder != null)
         {
             existingOrder.Status = updateOrder.Status;
-            existingOrder.Payment = updateOrder.Payment;
-            existingOrder.Amount = updateOrder.Amount;
+            // existingOrder.Payment = updateOrder.Payment;
+            // existingOrder.Amount = updateOrder.Amount;
 
             // Add the record to the context
             _appDbContext.Orders.Update(existingOrder);

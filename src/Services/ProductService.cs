@@ -45,7 +45,7 @@ public class ProductService
         return await _appDbContext.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Slug == slug);
     }
 
-    public async Task<Guid> AddProductAsync(ProductModel newProduct)
+    public async Task<Guid> AddProductAsync(CreateProductDto newProduct)
     {
         Product product = new Product
         {
@@ -55,9 +55,10 @@ public class ProductService
             Colors = newProduct.Colors,
             Quantity = newProduct.Quantity,
             Price = newProduct.Price,
-            CategoryId = newProduct.CategoryID,
         };
 
+        var category = await _appDbContext.Categories.FirstOrDefaultAsync(c => c.Name == newProduct.CategoryName);
+        product.CategoryId = category.CategoryID;
         product.Slug = Helper.GenerateSlug(product.ProductName);
 
         await _appDbContext.Products.AddAsync(product);
@@ -75,6 +76,8 @@ public class ProductService
             existingProduct.Quantity = updateProduct.Quantity;
             existingProduct.Price = updateProduct.Price;
             existingProduct.CategoryId = updateProduct.CategoryID;
+            existingProduct.Image = updateProduct.Image;
+            existingProduct.Colors = updateProduct.Colors;
             await _appDbContext.SaveChangesAsync();
             return true;
         }

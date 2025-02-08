@@ -16,7 +16,7 @@ public class CategoryService
     {
         return await _appDbContext.Categories.Include(c => c.Products).ToListAsync();
     }
-    public async Task<PaginationResult<CategoryModel>> GetAllCategoryService(int pageNumber=1, int pageSize=6)
+    public async Task<PaginationResult<CategoryModel>> GetAllCategoryService(int pageNumber = 1, int pageSize = 6)
     {
         var totalCount = _appDbContext.Categories.Count();
         var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
@@ -35,6 +35,15 @@ public class CategoryService
     public async Task<Category?> GetCategoryById(Guid categoryId)
     {
         return await _appDbContext.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.CategoryID == categoryId);
+    }
+    public async Task<Category?> GetCategoryByProductSlug(string productSlug)
+    {
+        var product = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Slug == productSlug);
+        if (product != null)
+        {
+            return await _appDbContext.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.CategoryID == product.CategoryId);
+        }
+        return null;
     }
 
     public async Task<bool> CreateCategoryService(CategoryModel newCategory)

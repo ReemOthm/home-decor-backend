@@ -28,9 +28,9 @@ public class ProductController : ControllerBase
     // }
 
     [HttpGet]
-    public async Task<IActionResult> GetProducts(string? category,string? keyword, decimal? minPrice, decimal? maxPrice, string? sortBy, bool isAscending, int page = 1, int pageSize = 6)
+    public async Task<IActionResult> GetProducts(string? category, string? keyword, decimal? minPrice, decimal? maxPrice, string? sortBy, bool isAscending, int page = 1, int pageSize = 6)
     {
-        var products = await _productService.SearchProductsAsync(category,keyword, minPrice, maxPrice, sortBy, isAscending, page, pageSize);
+        var products = await _productService.SearchProductsAsync(category, keyword, minPrice, maxPrice, sortBy, isAscending, page, pageSize);
         if (products != null)
         {
             return Ok(products);
@@ -74,13 +74,13 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddProduct(ProductModel newProduct)
+    public async Task<IActionResult> AddProduct(CreateProductDto newProduct)
     {
         var isAdmin = User.FindFirst(ClaimTypes.Role)?.Value;
         if (isAdmin != "Admin")
         {
             throw new UnauthorizedAccessException("User Id is missing from token");
-        }        
+        }
         var response = await _productService.AddProductAsync(newProduct);
         return ApiResponse.Created(response);
     }
@@ -110,7 +110,7 @@ public class ProductController : ControllerBase
         {
             throw new UnauthorizedAccessException("User Id is missing from token");
         }
-                
+
         if (!Guid.TryParse(productId, out Guid productIdGuid))
         {
             throw new BadRequestException("Invalid product ID format");

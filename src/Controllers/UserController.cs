@@ -152,11 +152,29 @@ public class UserController : ControllerBase
             throw new BadRequestException("Invalid User Id");
         }
         var user = await _userService.UpdateUser(userId, updateUser);
-        if (!user)
+        if (user == null )
         {
             throw new NotFoundException("User does not exist or an invalid Id is provided");
         }
-        return ApiResponse.Updated("User is updated successfully");
+        
+        var refreshToken = _authService.GenerateRefreshToken();
+
+        var userDto = new UserDto
+        {
+            UserID = user.UserID,
+            Username = user.Username,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
+            CreatedAt = user.CreatedAt,
+            Address = user.Address,
+            IsAdmin = user.IsAdmin,
+            IsBanned = user.IsBanned,
+
+        };
+        return Ok(new AuthenticatedResponse{Data= userDto});
     }
 
     [HttpPut("ban-unban")]
