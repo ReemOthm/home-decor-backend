@@ -103,7 +103,7 @@ if (builder.Environment.IsDevelopment())
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
+        builder.WithOrigins("https://main--home-decor-project.netlify.app", "https://main--home-decor-project.netlify.app/")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
